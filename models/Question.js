@@ -25,6 +25,7 @@ const QuestionSchema = new mongoose.Schema({
   video_solution_link: String,
   wordcounts: Number,
   difficulty: { type: String, enum: ["easy", "medium", "hard"], default: "medium" },
+  
 });
 
 const Question = mongoose.model('Question', QuestionSchema);
