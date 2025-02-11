@@ -41,13 +41,13 @@ const QuestionSchema = new mongoose.Schema(
     ],
     English: [
       {
-        answer: { type: String, required: true },
+        answer: { type: Number, required: true },
         attempted: { type: String, default: "false" },
         common_data: String,
-        correct: { type: String, required: true },
+        correct: { type: String, },
         currentTimer: { type: Number, default: 0 },
         explanation: String,
-        id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+        id: { type: mongoose.Schema.Types.ObjectId, },
         incorrect: String,
         language: { type: String, default: "English" },
         level_type: String,

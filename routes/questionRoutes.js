@@ -66,8 +66,11 @@ router.post("/add", async (req, res) => {
     if (language === "English") {
       const newQuestion = new Question({ exam: exam, English: req.body });
       await newQuestion.save();
+      res.status(201).json({"message":"sucess"})
     } else if (language === "Hindi") {
-      const newQuestion = new Question({ exam: id, Hindi: req.body });
+      const newQuestion = new Question({ exam: exam, Hindi: req.body });
+      await newQuestion.save();
+      res.status(201).json({"message":"sucess"})
     }
   } catch (error) {
     res.status(500).json({ error: "Failed to add question" });
@@ -82,6 +85,58 @@ router.get('/get', async (req, res) => {
 
   }
 })
+router.get('/ques_get/:id', async (req, res) => {
+
+  const { id } = req.params 
+  console.log(id);
+  
+  try {
+    const questions = await Question.find({exam:id})
+    res.status(200).json(questions)
+  } catch (error) {
+
+  }
+})
+
+router.get("/questions/:id", async (req, res) => {
+  const { id } = req.params
+  console.log(id);
+  
+  try {
+      const question = await Question.find({_id : id});
+
+      if (!question) {
+          return res.status(404).json({ message: "Question not found" });
+      }
+
+      // Extract English questions
+      const englishQuestions = question.English || [];
+
+      // Check for required keys in each English question object
+      const result = englishQuestions.map((q) => ({
+          section: q.section || "Not Available",
+          question_type: q.question_type || "Not Available",
+          sub_section: q.sub_section || "Not Available",
+      }));
+
+      res.json(question);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
+router.get("/count", async (req, res) => {
+  try {
+      const totalQuestions = await Question.countDocuments(); // Counts total documents
+      res.json({ count: totalQuestions });
+  } catch (error) {
+      console.error("Error fetching question count:", error);
+      res.status(500).json({ message: "Server Error" });
+  }
+});
+
 
 
 module.exports = router;
