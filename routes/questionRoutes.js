@@ -4,6 +4,7 @@ const multer = require("multer");
 const Question = require("../models/Question");
 const xlsx = require("xlsx");
 const fs = require("fs");
+const { log } = require("console");
 
 // Setup Multer for File Uploads
 const upload = multer({ dest: "../uploads/" }); // Ensure this folder exists
@@ -56,8 +57,24 @@ router.post('/uploadquestions', async (req, res) => {
   }
 
 })
+router.post("/add", async (req, res) => {
+  console.log(req.body);
+  const { language, exam } = req.body
 
-router.get('/questions', async (req, res) => {
+  try {
+ 
+    if (language === "English") {
+      const newQuestion = new Question({ exam: exam, English: req.body });
+      await newQuestion.save();
+    } else if (language === "Hindi") {
+      const newQuestion = new Question({ exam: id, Hindi: req.body });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add question" });
+  }
+});
+
+router.get('/get', async (req, res) => {
   try {
     const questions = await Question.find()
     res.status(200).json(questions)
