@@ -5,25 +5,24 @@ const ExamSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String },
 
-    length_test: [
-      {
-        topic_test: {
-          subject: { type: String },
-          topic: { type: String }
-        },
-      },
-      { section_test: { type: String } }
-    ],
-
+    length_test: {
+      type: String,
+      enum: ["sectional_test", "topic_test", "full_length_test"],
+      default: "full_length_test",
+    },
+    topic_test: {
+      subject: String,
+      topic: String,
+    },
     test_type: {
       type: String,
       enum: ["Prelims", "Mains", "None"],
-      default: "None"
+      default: "None",
     },
     time: {
       type: String,
       enum: ["Composite", "Sectional"],
-      default: "Composite"
+      default: "Composite",
     },
 
     test_name: { type: String },
@@ -44,8 +43,9 @@ const ExamSchema = new mongoose.Schema(
         plus_mark: { type: Number, required: true },
         minus_mark: { type: Number, required: true },
         cutoff_mark: { type: Number, required: true },
-        questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Questions" }] // ✅ Fixed reference
-      }
+        questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
+        orders: { type: Number, default: 0 }, // ✅ Fixed reference
+      },
     ],
 
     live_date: { type: Date, default: null },
@@ -64,13 +64,13 @@ const ExamSchema = new mongoose.Schema(
     q_level: {
       type: String,
       enum: ["easy", "medium", "hard"],
-      default: "medium"
+      default: "medium",
     },
     orders: { type: Number, default: 0 },
     video_solution: { type: String },
 
     lock_section: { type: Boolean, default: false },
-    lang_lock: { type: Boolean, default: false }
+    lang_lock: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

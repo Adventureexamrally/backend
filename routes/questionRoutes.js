@@ -45,98 +45,110 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     res.status(500).send("Error processing file: " + error.message);
   }
 });
-
-
-router.post('/uploadquestions', async (req, res) => {
+router.post("/uploadquestions", async (req, res) => {
   console.log(req.body);
   try {
-    const question = await Question.insertMany(req.body)
-    res.status(201).json(question)
+    const question = await Question.insertMany(req.body);
+    res.status(201).json(question);
   } catch (error) {
-    res.send("data not inserted")
+    res.send("data not inserted");
   }
-
-})
+});
 router.post("/add", async (req, res) => {
   console.log(req.body);
-  const { language, exam } = req.body
+  const { language, exam } = req.body;
 
   try {
- 
     if (language === "English") {
-      const newQuestion = new Question({ exam: exam, English: req.body });
+      const newQuestion = new Question(req.body);
       await newQuestion.save();
-      res.status(201).json({"message":"sucess"})
+      res.status(201).json({ message: "sucess" });
     } else if (language === "Hindi") {
-      const newQuestion = new Question({ exam: exam, Hindi: req.body });
+      const newQuestion = new Question(req.body);
       await newQuestion.save();
-      res.status(201).json({"message":"sucess"})
+      res.status(201).json({ message: "sucess" });
     }
   } catch (error) {
     res.status(500).json({ error: "Failed to add question" });
+    console.log(error);
+    
+  }
+});
+router.get("/get", async (req, res) => {
+  try {
+    let { page, limit } = req.query;  // Get page & limit from query params
+
+    page = parseInt(page) || 1;  // Default page = 1
+    limit = parseInt(limit) || 10;  // Default limit = 10
+
+    const skip = (page - 1) * limit;  // Calculate how many records to skip
+
+    const questions = await Question.find()
+      .select("sno question_type section status")
+      .sort({ createdAt: -1 })  // Latest first
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Question.countDocuments(); // Get total number of questions
+
+    res.status(200).json({
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+      questions,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
-router.get('/get', async (req, res) => {
-  try {
-    const questions = await Question.find()
-    res.status(200).json(questions)
-  } catch (error) {
 
-  }
-})
-router.get('/ques_get/:id', async (req, res) => {
-
-  const { id } = req.params 
+router.get("/ques_get/:id", async (req, res) => {
+  const { id } = req.params;
   console.log(id);
-  
-  try {
-    const questions = await Question.find({exam:id})
-    res.status(200).json(questions)
-  } catch (error) {
 
-  }
-})
+  try {
+    const questions = await Question.findById(id).populate("exam");
+    res.status(200).json(questions);
+  } catch (error) {}
+});
 
 router.get("/questions/:id", async (req, res) => {
-  const { id } = req.params
+  const { id } = req.params;
   console.log(id);
-  
+
   try {
-      const question = await Question.find({_id : id});
+    const question = await Question.find({ _id: id });
 
-      if (!question) {
-          return res.status(404).json({ message: "Question not found" });
-      }
+    if (!question) {
+      return res.status(404).json({ message: "Question not found" });
+    }
 
-      // Extract English questions
-      const englishQuestions = question.English || [];
+    // Extract English questions
+    const englishQuestions = question.English || [];
 
-      // Check for required keys in each English question object
-      const result = englishQuestions.map((q) => ({
-          section: q.section || "Not Available",
-          question_type: q.question_type || "Not Available",
-          sub_section: q.sub_section || "Not Available",
-      }));
+    // Check for required keys in each English question object
+    const result = englishQuestions.map((q) => ({
+      section: q.section || "Not Available",
+      question_type: q.question_type || "Not Available",
+      sub_section: q.sub_section || "Not Available",
+    }));
 
-      res.json(question);
+    res.json(question);
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Server Error" });
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
 });
-
 
 router.get("/count", async (req, res) => {
   try {
-      const totalQuestions = await Question.countDocuments(); // Counts total documents
-      res.json({ count: totalQuestions });
+    const totalQuestions = await Question.countDocuments(); // Counts total documents
+    res.json({ count: totalQuestions });
   } catch (error) {
-      console.error("Error fetching question count:", error);
-      res.status(500).json({ message: "Server Error" });
+    console.error("Error fetching question count:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 });
-
-
 
 module.exports = router;
