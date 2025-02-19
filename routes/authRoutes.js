@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const { hashPassword, comparePassword, generateToken } = require("../utils/helpers");
+// const { hashPassword, comparePassword, generateToken } = require("../utils/helpers");
 const Question = require("../models/Question");
 // Signup
 router.post("/signup", async (req, res) => {

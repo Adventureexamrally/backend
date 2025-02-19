@@ -6,7 +6,7 @@ import resultRoutes from "./routes/resultRoutes.js";
 import connectDB from "./config/db.js";
 import dotenv from "dotenv";
 import cors from "cors";
-import authMiddleware from './middlewares/authMiddleware.js'
+// import authMiddleware from './middlewares/authMiddleware.js'
 import multer from "multer";
 import path from "path";
 import bannerRoutes from "./routes/bannerRoute.js";
