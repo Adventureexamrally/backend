@@ -7,44 +7,44 @@ const fs = require("fs");
 const { log } = require("console");
 
 // Setup Multer for File Uploads
-const upload = multer({ dest: "../uploads/" }); // Ensure this folder exists
+// const upload = multer({ dest: "../uploads/" }); 
 
 // Route to Upload Excel File and Insert Data into MongoDB
-router.post("/upload", upload.single("file"), async (req, res) => {
-  try {
-    console.log("File received:", req.file);
+// router.post("/upload", upload.single("file"), async (req, res) => {
+//   try {
+//     console.log("File received:", req.file);
 
-    if (!req.file) {
-      return res.status(400).send("No file uploaded.");
-    }
+//     if (!req.file) {
+//       return res.status(400).send("No file uploaded.");
+//     }
 
-    const filePath = req.file.path;
-    console.log("Processing File:", filePath);
+//     const filePath = req.file.path;
+//     console.log("Processing File:", filePath);
 
-    // Read Excel File
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    let data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+//     // Read Excel File
+//     const workbook = xlsx.readFile(filePath);
+//     const sheetName = workbook.SheetNames[0];
+//     let data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-    // Fix options: Convert string to array
-    data = data.map((item) => ({
-      ...item,
-      options: item.options ? JSON.parse(item.options.replace(/'/g, '"')) : [], // Convert string to array
-    }));
+//     // Fix options: Convert string to array
+//     data = data.map((item) => ({
+//       ...item,
+//       options: item.options ? JSON.parse(item.options.replace(/'/g, '"')) : [], // Convert string to array
+//     }));
 
-    console.log("Parsed Data:", data); // Debugging line
+//     console.log("Parsed Data:", data); // Debugging line
 
-    // Insert into MongoDB
-    await Question.insertMany(data);
+//     // Insert into MongoDB
+//     await Question.insertMany(data);
 
-    fs.unlinkSync(filePath); // Remove uploaded file
+//     fs.unlinkSync(filePath); // Remove uploaded file
 
-    res.send("Data inserted successfully!");
-  } catch (error) {
-    console.error("Upload Error:", error);
-    res.status(500).send("Error processing file: " + error.message);
-  }
-});
+//     res.send("Data inserted successfully!");
+//   } catch (error) {
+//     console.error("Upload Error:", error);
+//     res.status(500).send("Error processing file: " + error.message);
+//   }
+// });
 router.post("/uploadquestions", async (req, res) => {
   console.log(req.body);
   try {
