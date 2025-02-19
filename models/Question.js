@@ -4,31 +4,41 @@ const QuestionSchema = new mongoose.Schema(
   {
     exam: [{ type: mongoose.Schema.Types.ObjectId, ref: "Exam" }],
     answer: { type: Number, required: true },
-    attempted: { type: String, default: "false" },
     common_data: String,
     correct: String,
-    currentTimer: { type: Number, default: 0 },
     explanation: String,
     language: { type: String, default: "English" },
-    level_type: String,
+    level_type: {
+      type: String,
+      enum: ["easy", "medium", "hard"],
+      default: "medium",
+    },
     minus_mark: { type: Number, default: 0 },
     options: { type: [String], required: true },
     plus_mark: { type: Number, default: 1 },
     ques_keywords: String,
     question: { type: String, required: true },
-    question_type: String,
-    section: String,
-    skipped: { type: String, default: "false" },
-    sno: { type: Number, unique: true, default: 0 }, // ✅ Ensure `sno` is a Number
-    status: { type: String, default: "active" },
-    sub_section: String,
-    video_solution_link: String,
-    wordcounts: { type: Number, default: 0 },
-    difficulty: {
+    question_type: {
       type: String,
-      enum: ["easy", "medium", "hard"],
-      default: "medium",
+      
     },
+    sub_type: {
+      type: String,
+    },
+    section: {
+      type: String,
+    },
+    sno: { type: Number, unique: true, default: 0 }, // ✅ Ensure `sno` is a Number
+    status: { type:String ,default: 'active' },
+    sub_section: {
+      type: String,
+    },
+    video_solution_link: {
+      type: String,
+    },
+    topic: { type: String},
+    sub_topic: { type: String},
+    wordcounts: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

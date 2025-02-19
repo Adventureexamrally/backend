@@ -5,9 +5,9 @@ const ResultSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  testId: {
+  ExamId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Test'
+    ref: 'Exam'
   },
   answers: [
     {

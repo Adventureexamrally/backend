@@ -71,7 +71,7 @@ router.post("/add", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to add question" });
     console.log(error);
-    
+
   }
 });
 router.get("/get", async (req, res) => {
@@ -85,7 +85,7 @@ router.get("/get", async (req, res) => {
 
     const questions = await Question.find()
       .select("sno question_type section status")
-      .sort({ createdAt: -1 })  // Latest first
+      .sort({ createdAt: 1 })  // Latest first
       .skip(skip)
       .limit(limit);
 
@@ -110,7 +110,7 @@ router.get("/ques_get/:id", async (req, res) => {
   try {
     const questions = await Question.findById(id).populate("exam");
     res.status(200).json(questions);
-  } catch (error) {}
+  } catch (error) { }
 });
 
 router.get("/questions/:id", async (req, res) => {
@@ -150,5 +150,91 @@ router.get("/count", async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
+
+//get question by Id
+router.get('/:id', (req, res) => {
+  const { id } = req.params
+  console.log(id);
+  try {
+    ques = Question.findById(id)
+    res.status(200).json(ques)
+  } catch (error) {
+
+  }
+})
+
+router.get("/", async (req, res) => {
+  try {
+    const totalQuestions = await Question.countDocuments(); // Counts total documents
+    res.json({ count: totalQuestions });
+  } catch (error) {
+    console.error("Error fetching question count:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+router.put('/editQuestion/:id', async (req, res) => {
+  console.log(req.params);
+  const { id } = req.params
+  console.log(req.body);
+  try {
+    const updatedQuestion = await Question.findByIdAndUpdate(id, req.body, { new: true });
+    res.status(200).json(updatedQuestion);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update question" });
+    console.log(error);
+  }
+})
+
+router.delete("/delete/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedQuestion = await Question.findByIdAndDelete(id);
+    res.status(200).json(deletedQuestion);
+    console.log(deletedQuestion);
+    // Delete related exam records
+    // await Exam.deleteMany({ question: id });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete question" });
+    console.log(error);
+  }
+
+  // Delete related exam records
+});
+
+// Update question status
+
+router.put("/update-status/:id", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const updatedQuestion = await Question.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+    res.status(200).json(updatedQuestion);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update question status" });
+    console.log(error);
+  }
+});
+
+// insert new question
+
+router.post("/insert", async (req, res) => {
+  console.log(req.body);
+  try {
+    const newQuestion = new Question(req.body);
+    await newQuestion.save();
+    res.status(201).json({ message: "success" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add question" });
+    console.log(error);
+  }
+});
+
 
 module.exports = router;
