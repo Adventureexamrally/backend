@@ -302,6 +302,9 @@ router.post("/addQuestion/:examId/:sectionId", async (req, res) => {
   const { examId, sectionId } = req.params;
   const { questionId } = req.body; // Expecting questionId in request body
 
+  console.log(questionId);
+  
+//  return res.status(200).json({ message: "Question added successfully" });
   try {
     const exam = await Exam.findById(examId);
     if (!exam) {
@@ -329,7 +332,7 @@ router.post("/addQuestion/:examId/:sectionId", async (req, res) => {
   }
 });
 
-router.post("/addQuestion/:examId/:sectionId", async (req, res) => {
+router.post("/removeQuestion/:examId/:sectionId", async (req, res) => {
   const { examId, sectionId } = req.params;
   const { questionId } = req.body; // Expecting questionId in request body
 
@@ -345,20 +348,23 @@ router.post("/addQuestion/:examId/:sectionId", async (req, res) => {
       return res.status(404).json({ message: "Section not found" });
     }
 
-    // Add the question ID if it doesn't already exist
-    if (!section.questions.includes(questionId)) {
-      section.questions.push(questionId);
-    } else {
-      return res.status(400).json({ message: "Question already exists in the section" });
+    // Check if the question exists in the section's questions array
+    const questionIndex = section.questions.indexOf(questionId);
+    if (questionIndex === -1) {
+      return res.status(404).json({ message: "Question not found in this section" });
     }
 
-    await exam.save();
-    res.status(200).json({ message: "Question added successfully", section });
+    // Remove the question from the section
+    section.questions.splice(questionIndex, 1); // Remove the question at the found index
+
+    await exam.save(); // Save the updated exam document
+    res.status(200).json({ message: "Question removed successfully", section });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 
 
 //Add Question from section

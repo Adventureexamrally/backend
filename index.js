@@ -21,7 +21,9 @@ const PORT = 3000;
 
 // Middleware
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));  // For JSON payloads
+app.use(express.urlencoded({ limit: '10mb', extended: true }));  // For URL-encoded payloads
+
 connectDB()
 
 // Routes

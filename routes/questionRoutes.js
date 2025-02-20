@@ -235,6 +235,53 @@ router.post("/insert", async (req, res) => {
     console.log(error);
   }
 });
+router.get("/search", async (req, res) => {
+  const { search } = req.query;
+  // const search = 2;
+  console.log(search);
+  
+
+  // Check if search query is empty or invalid
+  if (!search || search.trim().length === 0) {
+    return res.status(400).json({ message: "Invalid search query" });
+  }
+
+  console.log("Search term:", search, "Type:", typeof search);
+
+  try {
+    const searchNum = Number(search); // Try to convert to number
+
+    // Construct the search query
+    const query = isNaN(searchNum)
+      ? { $or: [
+          { question: { $regex: search, $options: "i" } }, // Search in the 'question' field
+          { topic: { $regex: search, $options: "i" } },    // Search in 'topic'
+          { sub_topic: { $regex: search, $options: "i" } }, // Search in 'sub_topic'
+          { ques_keywords: { $regex: search, $options: "i" } } // Search in 'ques_keywords'
+        ] }
+      : {
+        $or: [
+          { sno: searchNum },                  // Search by 'sno' number
+          { question: { $regex: search, $options: "i" } }, // Search by question text
+          { topic: { $regex: search, $options: "i" } }     // Search by topic
+        ]
+      };
+
+    // Fetch results from the database
+    const result = await Question.find(query).select("_id sno question topic sub_topic ques_keywords");
+
+    // If no results found
+    if (result.length === 0) {
+      return res.status(404).json({ message: "No results found" });
+    }
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 
 
 module.exports = router;
