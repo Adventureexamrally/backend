@@ -7,10 +7,8 @@ import connectDB from "./config/db.js";
 import dotenv from "dotenv";
 import cors from "cors";
 // import authMiddleware from './middlewares/authMiddleware.js'
-import multer from "multer";
-import path from "path";
 import bannerRoutes from "./routes/bannerRoute.js";
-import Question from "./models/Question.js";
+import clerkRoutes from "./routes/clerkRoute.js";
 
 const app = express()
 
@@ -18,6 +16,9 @@ app.use(cors())
 dotenv.config()
 
 const PORT = 3000;
+
+
+
 
 // Middleware
 
@@ -32,6 +33,8 @@ app.use("/api/exams", examRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/results", resultRoutes);
 app.use("/api/banner", bannerRoutes);
+app.use("/api/clerk", clerkRoutes);
+
 
 
 app.get('/', (req, res) =>{

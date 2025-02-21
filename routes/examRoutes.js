@@ -33,7 +33,7 @@ router.get("/get", async (req, res) => {
 });
 router.get("/getAllExam", async (req, res) => {
   try {
-    const exams = await Exam.find();
+    const exams = await Exam.find().select("_id title exam_name show_name  ");
     res.json(exams);
   } catch (error) {
     console.log(error);

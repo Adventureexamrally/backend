@@ -124,16 +124,6 @@ router.get("/questions/:id", async (req, res) => {
       return res.status(404).json({ message: "Question not found" });
     }
 
-    // Extract English questions
-    const englishQuestions = question.English || [];
-
-    // Check for required keys in each English question object
-    const result = englishQuestions.map((q) => ({
-      section: q.section || "Not Available",
-      question_type: q.question_type || "Not Available",
-      sub_section: q.sub_section || "Not Available",
-    }));
-
     res.json(question);
   } catch (error) {
     console.error(error);
