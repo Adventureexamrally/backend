@@ -9,6 +9,7 @@ import cors from "cors";
 // import authMiddleware from './middlewares/authMiddleware.js'
 import bannerRoutes from "./routes/bannerRoute.js";
 import clerkRoutes from "./routes/clerkRoute.js";
+import seoRoutes from "./routes/seoRoutes.js";
 
 const app = express()
 
@@ -34,6 +35,7 @@ app.use("/api/questions", questionRoutes);
 app.use("/api/results", resultRoutes);
 app.use("/api/banner", bannerRoutes);
 app.use("/api/clerk", clerkRoutes);
+app.use('/api', seoRoutes);
 
 
 
