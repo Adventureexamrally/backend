@@ -12,23 +12,21 @@ const clerkRoutes = require("./routes/clerkRoute.js");
 const seoRoutes = require("./routes/seoRoutes.js");
 const path = require("path");
 const fs = require("fs");
-const { fileURLToPath } = require('url');  // Use CommonJS require syntax
-const { dirname } = require('path');  // Use CommonJS require syntax
 const uploadRoutes = require("./routes/uploadRoute.js");
 const PakageRoutes = require("./routes/pakageRoute.js");
 const topicTestRoutes = require("./routes/topicTestRoute.js");
 
-// Your other code...
-
-
+// Load environment variables from .env file
 dotenv.config();
+
 const app = express();
 
-// Get __dirname for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Setup CORS
+// Setup CORS (Customizing the allowed origins)
+// const corsOptions = {
+//   origin: 'http://your-frontend-url.com', // Change this to your frontend URL
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// };
 app.use(cors());
 
 // Setup static file serving for uploaded files
@@ -68,8 +66,12 @@ app.post('/api/uploads/images', upload.single('file'), (req, res) => {
   }
 
   // Respond with the URL of the uploaded image
-  const imageUrl = `${process.env.BASE_URL}/uploads/images/${req.file.filename}`;
-  res.json({ location: imageUrl });
+  try {
+    const imageUrl = `${process.env.BASE_URL}/uploads/images/${req.file.filename}`;
+    res.json({ location: imageUrl });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 // Routes
@@ -80,9 +82,9 @@ app.use("/api/results", resultRoutes);
 app.use("/api/banner", bannerRoutes);
 app.use("/api/clerk", clerkRoutes);
 app.use('/api', seoRoutes);
-app.use('/api/uploads',uploadRoutes);
-app.use('/api/packages',PakageRoutes);
-app.use('/api/topic-test',topicTestRoutes);
+app.use('/api/uploads', uploadRoutes);
+app.use('/api/packages', PakageRoutes);
+app.use('/api/topic-test', topicTestRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello from the server!');
