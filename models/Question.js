@@ -13,32 +13,33 @@ const QuestionSchema = new mongoose.Schema(
       enum: ["easy", "medium", "hard"],
       default: "medium",
     },
-    minus_mark: { type: Number, default: 0 },
+    minus_mark: { type: Number, default: 0.25 },
     options: { type: [String], required: true },
     plus_mark: { type: Number, default: 1 },
     ques_keywords: String,
     question: { type: String, required: true },
     question_type: {
       type: String,
-      
+
     },
-    sub_type: {
+    question_mode: {
+      type: String,
+
+    },
+    sector: {
       type: String,
     },
-    section: {
-      type: String,
-    },
-    sno: { type: Number, unique: true, default: 0 }, // ✅ Ensure `sno` is a Number
-    status: { type:String ,default: 'active' },
-    sub_section: {
+    sno: { type: Number, unique: true, default: 0 },
+    status: { type: String, default: 'active' },
+    subject: {
       type: String,
     },
     video_solution_link: {
       type: String,
     },
-    topic: { type: String},
-    sub_topic: { type: String},
-    wordcounts: { type: Number, default: 0 },
+    topic: { type: String },
+    sub_topic: { type: String },
+    words_limit: { type: Number, default: 250 },
   },
   { timestamps: true }
 );

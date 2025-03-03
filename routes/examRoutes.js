@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Exam = require("../models/Exam");
-const TestTopic = require("../models/testTopic");
+const TestTopic = require("../models/TopicTest");
 const Question = require("../models/Question");
 
 // Create a new exam
@@ -62,7 +62,7 @@ router.put("/update/:id", async (req, res) => {
     await exam.save();
     res.status(201).json({ message: "updated" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create exam." });
+    res.status(500).json({ error: "Failed to update exam." });
   }
 });
 

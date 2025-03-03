@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
-const TestTopicSchema = new mongoose.Schema({
+const TopicTestSchema = new mongoose.Schema({
   sub: { type: String, required: true },
+  submenus:[ { type: String, required: true }],
   topics: [
     {
       name: { type: String, required: true }, // Topic name
@@ -10,6 +11,6 @@ const TestTopicSchema = new mongoose.Schema({
   ],
 });
 
-const TestTopic = mongoose.model('TestTopic', TestTopicSchema);
+const TopicTest = mongoose.model('TopicTest', TopicTestSchema);
 
-module.exports = TestTopic;
+module.exports = TopicTest;

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const bannerShema = new mongoose.Schema({
     title: String,
@@ -11,4 +11,4 @@ const bannerShema = new mongoose.Schema({
 })
 
 const Banner = mongoose.model("Banner", bannerShema)
-export default  Banner;
+module.exports = Banner

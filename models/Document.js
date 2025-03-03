@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const OptionSchema = new mongoose.Schema({
     text: { type: String,  }, // Option text (e.g., "Thiruchitrambalam")
@@ -15,4 +15,4 @@ const DocumentSchema = new mongoose.Schema({
 
 const Document = mongoose.model("Document", DocumentSchema);
 
-export default Document;
+module.exports = Document;

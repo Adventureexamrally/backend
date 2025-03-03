@@ -12,11 +12,12 @@ const ExamSchema = new mongoose.Schema(
     },
     topic_test: {
       subject: String,
+      sub_menu: String,
       topic: String,
     },
     test_type: {
       type: String,
-      enum: ["Prelims", "Mains", "None"],
+      enum: ["Prelims", "Mains", "PQY"],
       default: "None",
     },
     time: {
@@ -30,7 +31,7 @@ const ExamSchema = new mongoose.Schema(
     exam_name: { type: String },
 
     duration: { type: Number, required: true, min: 1 },
-    status: { type: Boolean, default: true },
+    status: { type: String, default: "active" },
 
     id: { type: Number, required: true },
 
@@ -44,12 +45,12 @@ const ExamSchema = new mongoose.Schema(
         minus_mark: { type: Number, required: true },
         cutoff_mark: { type: Number, required: true },
         questions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Question" }],
-        orders: { type: Number, default: 0 }, // ✅ Fixed reference
+        s_order: { type: Number, default: 0 }, 
       },
     ],
 
     live_date: { type: Date, default: null },
-    t_question: { type: Number, required: true },
+    t_questions: { type: Number, required: true },
     t_cutoff: { type: Number, required: true }, // ✅ Fixed typo
 
     english_status: { type: Boolean, default: false },
