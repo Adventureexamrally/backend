@@ -17,8 +17,8 @@ const ExamSchema = new mongoose.Schema(
     },
     test_type: {
       type: String,
-      enum: ["Prelims", "Mains", "PQY"],
-      default: "None",
+      // enum: ["Prelims", "Mains", "PQY"],
+      // default: "None",
     },
     time: {
       type: String,
